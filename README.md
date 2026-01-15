@@ -1,15 +1,9 @@
-# MMM-Template
-Use this template for creating new MagicMirror² modules.
-
-See the [wiki page](https://github.com/Dennis-Rosenbaum/MMM-Template/wiki) for an in depth overview of how to get started.
-
-# MMM-Template
-
-*MMM-Template* is a module for [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror) that displays ... [Module description]
+# MMM-Assistant
+Use this module to add a local LLM-powered voice assistant to your MagicMirror.
 
 ## Screenshot
 
-![Example of MMM-Template](./example_1.png)
+![Example of MMM-Template](./example.png)
 
 ## Installation
 
@@ -19,7 +13,7 @@ In your terminal, go to the modules directory and clone the repository:
 
 ```bash
 cd ~/MagicMirror/modules
-git clone [GitHub url]
+git clone https://github.com/rahil234/MMM-Assistant.git
 ```
 
 ### Update
@@ -27,7 +21,7 @@ git clone [GitHub url]
 Go to the module directory and pull the latest changes:
 
 ```bash
-cd ~/MagicMirror/modules/MMM-Template
+cd ~/MagicMirror/modules/MMM-Assistant
 git pull
 ```
 
@@ -41,7 +35,7 @@ Minimal configuration to use the module:
 
 ```js
     {
-        module: 'MMM-Template',
+        module: 'MMM-Assistant',
         position: 'lower_third'
     },
 ```
@@ -50,25 +44,17 @@ Configuration with all options:
 
 ```js
     {
-        module: 'MMM-Template',
-        position: 'lower_third',
+        module: "MMM-Assistant",
+        position: "lower_third",
         config: {
-            exampleContent: 'Welcome world'
+          llmEndpoint: "http://localhost:11434/api/generate",
+          model: "llama3.1:8b",
+          systemPrompt: "You are a helpful voice assistant for a MagicMirror. Answer concisely.",
+          responseClearDelay: 5000,
+          volume: 0.5;
         }
     },
 ```
-
-### Configuration options
-
-Option|Possible values|Default|Description
-------|------|------|-----------
-`exampleContent`|`string`|not available|The content to show on the page
-
-## Sending notifications to the module
-
-Notification|Description
-------|-----------
-`TEMPLATE_RANDOM_TEXT`|Payload must contain the text that needs to be shown on this module
 
 ## Developer commands
 

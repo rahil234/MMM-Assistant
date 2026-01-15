@@ -1,7 +1,11 @@
 Module.register("MMM-Assistant", {
 
   defaults: {
-
+    llmEndpoint: "http://localhost:11434/api/generate",
+    model: "llama3.1:8b",
+    systemPrompt: "You are a helpful voice assistant for a MagicMirror. Answer concisely.",
+    responseClearDelay: 5000,
+    volume: 0.5
   },
 
   /**
@@ -20,6 +24,8 @@ Module.register("MMM-Assistant", {
 	  this.transcript = "";
 	  this.lastContext = undefined;
 	  this.response = "";
+
+    this.sendSocketNotification("INIT_CONFIG", this.config);
   },
 
   /**
@@ -39,16 +45,33 @@ Module.register("MMM-Assistant", {
 
 			  this.response = payload.text;
 
+			  this.sendNotification("PLAY_SOUND", {sound: "response", volume: 0.5});
+			  this.sendNotification("SPEAK_TEXT", {text: payload.text});
+
 			  setTimeout(() => {
 				  this.response = "";
 				  this.updateDom();
 			  }, 5000);
 
 			  this.updateDom();
-
-			  this.sendNotification("PLAY_SOUND", {sound: "response", volume: 0.5});
-			  this.sendNotification("SPEAK_TEXT", {text: payload.text});
 			  break;
+      case "ASSISTANT_STREAM":
+        console.log("MMM-Assistant received stream chunk:", payload);
+        this.response += payload.text;
+        this.sendNotification("SPEAK_STREAM", {text: payload.text});
+
+        this.updateDom();
+        break;
+      case "ASSISTANT_STREAM_END":
+        console.log("MMM-Assistant stream ended.");
+        this.sendNotification("PLAY_SOUND", {sound: "response", volume: 0.5});
+        this.sendNotification("SPEAK_STREAM_DONE", {text: this.response});
+
+        setTimeout(() => {
+          this.response = "";
+          this.updateDom();
+        }, 5000);
+        break;
 	  }
   },
 

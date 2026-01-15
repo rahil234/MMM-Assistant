@@ -1,7 +1,7 @@
 {
   "name": "mmm-assistant",
   "version": "0.0.1",
-  "description": "[Module description]",
+  "description": "MagicMirror Module for integrating Voice Assistant via LLMs",
   "main": "MMM-Assistant.js",
   "scripts": {
     "lint": "eslint",
@@ -10,17 +10,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+[GitHub url].git"
+    "url": "https://github.com/rahil234/MMM-Assistant.git"
   },
   "keywords": [
-    "template"
+    "template",
+    "magicmirror",
+    "module",
+    "assistant",
+    "llm",
+    "ai"
   ],
-  "author": "[Author]",
+  "author": "rahil234",
   "license": "MIT",
   "bugs": {
-    "url": "[GitHub url]/issues"
+    "url": "https://github.com/rahil234/MMM-Assistant/issues"
   },
-  "homepage": "[GitHub url]#readme",
+  "homepage": "https://github.com/rahil234/MMM-Assistant.git#readme",
   "devDependencies": {
     "@eslint/css": "^0.9.0",
     "@eslint/js": "^9.30.1",
