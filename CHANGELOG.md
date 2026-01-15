@@ -7,8 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.0.1 - 2026-01-14
 ### Added
-- Initial release
 - Can interact with local LLM endpoints
 - Configurable system prompt and response delay
 - Can call the TTS engine to speak responses
-
