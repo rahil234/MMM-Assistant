@@ -1,18 +1,18 @@
-Module.register("MMM-Assistant", {
-
+Module.register('MMM-Assistant', {
   defaults: {
-    llmEndpoint: "http://localhost:11434/api/generate",
-    model: "llama3.1:8b",
-    systemPrompt: "You are a helpful voice assistant for a MagicMirror. Answer concisely.",
+    llmEndpoint: 'http://localhost:11434/api/generate',
+    model: 'llama3.1:8b',
+    systemPrompt:
+      'You are a helpful voice assistant for a MagicMirror. Answer concisely.',
     responseClearDelay: 5000,
-    volume: 0.5
+    volume: 0.5,
   },
 
   /**
    * Apply the default styles.
    */
   getStyles() {
-    return ["MMM-Assistant.css"]
+    return ['MMM-Assistant.css'];
   },
 
   /**
@@ -20,12 +20,12 @@ Module.register("MMM-Assistant", {
    */
   start() {
     // set timeout for next random text
-	  console.log("MMM-Assistant started.");
-	  this.transcript = "";
-	  this.lastContext = undefined;
-	  this.response = "";
+    console.log('MMM-Assistant started.');
+    this.transcript = '';
+    this.lastContext = undefined;
+    this.response = '';
 
-    this.sendSocketNotification("INIT_CONFIG", this.config);
+    this.sendSocketNotification('INIT_CONFIG', this.config);
   },
 
   /**
@@ -36,43 +36,43 @@ Module.register("MMM-Assistant", {
    * @param {any} payload - The payload data`returned by the node helper.
    */
   socketNotificationReceived: function (notification, payload) {
-	  switch (notification) {
-		  case "ASSISTANT_RESPONSE":
-			  console.log("MMM-Assistant received response:", payload);
-			  if (payload.context) {
-				  this.lastContext = payload.context;
-			  }
+    switch (notification) {
+      case 'ASSISTANT_RESPONSE':
+        console.log('MMM-Assistant received response:', payload);
+        if (payload.context) {
+          this.lastContext = payload.context;
+        }
 
-			  this.response = payload.text;
+        this.response = payload.text;
 
-			  this.sendNotification("PLAY_SOUND", {sound: "response", volume: 0.5});
-			  this.sendNotification("SPEAK_TEXT", {text: payload.text});
+        this.sendNotification('PLAY_SOUND', { sound: 'response', volume: 0.5 });
+        this.sendNotification('SPEAK_TEXT', { text: payload.text });
 
-			  setTimeout(() => {
-				  this.response = "";
-				  this.updateDom();
-			  }, 5000);
-
-			  this.updateDom();
-			  break;
-      case "ASSISTANT_STREAM":
-        console.log("MMM-Assistant received stream chunk:", payload);
-        this.response += payload.text;
-        this.sendNotification("SPEAK_STREAM", {text: payload.text});
+        setTimeout(() => {
+          this.response = '';
+          this.updateDom();
+        }, 5000);
 
         this.updateDom();
         break;
-      case "ASSISTANT_STREAM_END":
-        console.log("MMM-Assistant stream ended.");
-        this.sendNotification("PLAY_SOUND", {sound: "response", volume: 0.5});
-        this.sendNotification("SPEAK_STREAM_DONE", {text: this.response});
+      case 'ASSISTANT_STREAM':
+        console.log('MMM-Assistant received stream chunk:', payload);
+        this.response += payload.text;
+        this.sendNotification('SPEAK_STREAM', { text: payload.text });
+
+        this.updateDom();
+        break;
+      case 'ASSISTANT_STREAM_END':
+        console.log('MMM-Assistant stream ended.');
+        this.sendNotification('PLAY_SOUND', { sound: 'response', volume: 0.5 });
+        this.sendNotification('SPEAK_STREAM_DONE', { text: this.response });
 
         setTimeout(() => {
-          this.response = "";
+          this.response = '';
           this.updateDom();
         }, 5000);
         break;
-	  }
+    }
   },
 
   /**
@@ -82,64 +82,66 @@ Module.register("MMM-Assistant", {
    * @param {number} payload the payload type.
    */
   notificationReceived(notification, payload) {
-	  switch (notification) {
-		  case "WAKE_ASSISTANT":
-			  this.sendSocketNotification("WAKE_ASSISTANT");
-			  this.sendNotification("PLAY_SOUND", {sound: "detected", volume: 0.5});
-			  this.sendNotification("START_TRANSCRIPT");
-			  break;
-		  case "CANCEL_ASSISTANT":
-			  this.sendSocketNotification("CANCEL_ASSISTANT");
-			  this.sendNotification("PLAY_SOUND", {sound: "cancelled", volume: 0.5});
-			  this.sendNotification("STOP_TRANSCRIPT");
-			  break;
-		  case "PROCESS_TRANSCRIPT":
-			  console.log("MMM-Assistant processing transcript:", payload);
-			  if (!payload || !payload.text) {
-				  console.log("MMM-Assistant: No transcript text to process.");
-				  return;
-			  }
-			  else if (payload.partial) {
-				  console.log("MMM-Assistant: Ignoring partial transcript.");
-				  this.transcript = payload.text;
-				  this.updateDom();
-				  return;
-			  } else {
-				  this.sendSocketNotification("GENERATE_ANSWER", {
-					  prompt: payload.text,
-					  context: this.lastContext
-				  })
-				  this.sendNotification("STOP_TRANSCRIPT");
-				  this.transcript = payload.text;
-				  this.updateDom();
-				  setTimeout(() => {
-					  this.transcript = "";
-					  this.updateDom();
-				  }, 5000);
-			  }
-			  break;
-	  }
+    switch (notification) {
+      case 'WAKE_ASSISTANT':
+        this.sendSocketNotification('WAKE_ASSISTANT');
+        this.sendNotification('PLAY_SOUND', { sound: 'jarvis', volume: 0.5 });
+        this.sendNotification('START_TRANSCRIPT');
+        break;
+      case 'CANCEL_ASSISTANT':
+        this.sendSocketNotification('CANCEL_ASSISTANT');
+        this.sendNotification('PLAY_SOUND', {
+          sound: 'cancelled',
+          volume: 0.5,
+        });
+        this.sendNotification('STOP_TRANSCRIPT');
+        break;
+      case 'PROCESS_TRANSCRIPT':
+        console.log('MMM-Assistant processing transcript:', payload);
+        if (!payload || !payload.text) {
+          console.log('MMM-Assistant: No transcript text to process.');
+          return;
+        } else if (payload.partial) {
+          console.log('MMM-Assistant: Ignoring partial transcript.');
+          this.transcript = payload.text;
+          this.updateDom();
+          return;
+        } else {
+          this.sendSocketNotification('GENERATE_ANSWER', {
+            prompt: payload.text,
+            context: this.lastContext,
+          });
+
+          this.transcript = payload.text;
+          this.updateDom();
+          setTimeout(() => {
+            this.transcript = '';
+            this.updateDom();
+          }, 5000);
+        }
+        break;
+    }
   },
 
-	/**
-	 * Render the page we're on.
-	 */
-	getDom() {
-		const wrapper = document.createElement("div")
+  /**
+   * Render the page we're on.
+   */
+  getDom() {
+    const wrapper = document.createElement('div');
 
-		const promptContainer = document.createElement("div")
-		promptContainer.className = "prompt-container"
-		promptContainer.innerHTML = this.transcript
+    const promptContainer = document.createElement('div');
+    promptContainer.className = 'prompt-container';
+    promptContainer.innerHTML = this.transcript;
 
-		wrapper.appendChild(promptContainer)
+    wrapper.appendChild(promptContainer);
 
-		const responseContainer = document.createElement("div")
-		responseContainer.className = "response-container"
-		responseContainer.innerHTML = this.response
+    const responseContainer = document.createElement('div');
+    responseContainer.className = 'response-container';
+    responseContainer.innerHTML = this.response;
 
-		wrapper.appendChild(responseContainer)
+    wrapper.appendChild(responseContainer);
 
-		wrapper.className = "MMM-Assistant"
-		return wrapper
-	},
-})
+    wrapper.className = 'MMM-Assistant';
+    return wrapper;
+  },
+});

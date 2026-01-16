@@ -3,10 +3,10 @@
 modular, offline-first voice assistant for MagicMirror² processes the user input using AI running locally or cloud.
 
 Use this module to add a local LLM-powered voice assistant to your MagicMirror.
+
 ## Screenshot
 
 ![Example of MMM-Template](./example.png)
-
 
 ## Installation
 
