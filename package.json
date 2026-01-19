@@ -26,6 +26,11 @@
     "url": "https://github.com/rahil234/MMM-Assistant/issues"
   },
   "homepage": "https://github.com/rahil234/MMM-Assistant.git#readme",
+  "dependencies": {
+    "@langchain/langgraph": "^1.1.0",
+    "better-sqlite3": "^12.6.2",
+    "ollama": "^0.6.3"
+  },
   "devDependencies": {
     "@eslint/css": "^0.14.1",
     "@eslint/js": "^9.39.2",
