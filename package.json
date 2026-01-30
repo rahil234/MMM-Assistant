@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/rahil234/MMM-Assistant.git#readme",
   "dependencies": {
-    "@langchain/langgraph": "^1.1.0",
+    "@langchain/langgraph": "^1.1.2",
     "better-sqlite3": "^12.6.2",
     "ollama": "^0.6.3"
   },
